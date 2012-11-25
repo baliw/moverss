@@ -5,6 +5,15 @@
 
 // Package moverss implements a rss 2.0 feed generator
 //
+//
+// RSS (Rich Site Summary, or Really Simple Syndication) is a data format used
+// to publish frequently updated works - such as blog entries, news headlines,
+// audio and video - in a standardized format.
+//
+// An RSS document (which is called a "feed", "web feed", or "channel") includes
+// full or summarized text, plus metadata such as publishing dates and
+// authorship.
+//
 // Spec located at: http://cyber.law.harvard.edu/rss/rss.html
 //
 // Example Usage
