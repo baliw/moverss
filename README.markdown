@@ -20,45 +20,7 @@ Installing
 Example
 =======
 
-```go
-package main
-
-import (
-        "fmt"
-        "github.com/baliw/moverss"
-        "time"
-)
-
-func main() {
-        c := moverss.ChannelFactory("Daniel's Channel", "http://RubyDeveloper.com/", "My Blog")
-        c.SetPubDate(time.Now().UTC())
-
-        c.AddItem(&moverss.Item{
-                Title:       "Ruby Developer",
-                Link:        "http://RubyDeveloper.com/",
-                Description: "Ruby Developer",
-                PubDate:     time.Now().UTC().Format(time.RFC1123),
-        })
-        c.AddItem(&moverss.Item{
-                Title:       "Stack Overflow",
-                Link:        "http://stackoverflow.com/users/1305696/daniel",
-                Description: "Stack Overflow",
-                PubDate:     time.Now().UTC().Format(time.RFC1123),
-        })
-
-        // Example: Using an item's SetPubDate method
-        i := &moverss.Item{
-                Title:       "LinkedIn",
-                Link:        "http://www.linkedin.com/in/dangogh",
-                Description: "My LinkedIn",
-        }
-        i.SetPubDate(time.Now().Unix())
-        c.AddItem(i)
-
-        fmt.Printf("%s\n\n", c.Publish())
-        fmt.Printf("%s\n\n", c.PublishIndent())
-}
-```
+The best example is in [the test file](https://github.com/jbckmn/gopod/blob/master/gopod_test.go)
 
 Full documentation
 ==================

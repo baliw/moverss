@@ -14,7 +14,7 @@
 //
 // Example Usage
 //
-//		c := gopod.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog")
+//		c := gopod.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog", "http://example.com/image.png")
 //		c.AddItem(&gopod.Item{
 //			Title:"Ruby Developer",
 //			Link:"http://RubyDeveloper.com/",
