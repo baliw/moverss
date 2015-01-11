@@ -1,19 +1,13 @@
-// Copyright 2012 Daniel Walton - All rights reserved.
-// Author: Daniel Walton <dan@RubyDeveloper.com>
-//         https://github.com/baliw
-//         @dan_gogh
-
 //
-// This package implements a rss 2.0 feed generator based on the spec
-// located at: http://cyber.law.harvard.edu/rss/rss.html
+// This package implements a RSS/Podcast 2.0 feed generator
 //
-// Test code for moverss.
+// Test code for gopod.
 //
 // Use `go test` on the commandline to test this package
 //
 //
 
-package moverss
+package gopod
 
 import (
 	"fmt"
@@ -22,10 +16,11 @@ import (
 )
 
 func Test1(*testing.T) {
-	fmt.Printf("Testing Moverss...\n")
+	fmt.Printf("Testing gopod...\n")
 
-	c := ChannelFactory("Daniel's Channel", "http://RubyDeveloper.com/", "My Blog")
+	c := ChannelFactory("Daniel's Channel", "http://RubyDeveloper.com/", "My Blog", "http://example.com/image.png")
 	c.SetPubDate(time.Now().UTC())
+	c.SetiTunesExplicit("No")
 
 	c.AddItem(&Item{
 		Title:       "Ruby Developer",
