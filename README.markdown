@@ -25,17 +25,13 @@ The best example is in [the test file](https://github.com/jbckmn/gopod/blob/mast
 Full documentation
 ==================
 
-Read it [online](http://go.pkgdoc.org/github.com/baliw/moverss) or run 
+Read it [online](http://go.pkgdoc.org/github.com/jbckmn/gopod) or run 
 
-    $ go doc github.com/baliw/moverss
+    $ go doc github.com/jbckmn/gopod
 
 Other Details
 =====================
 
-A few of the more obscure data points aren't implemented yet.
-I haven't seen feeds that implement them yet and I just want to make sure my implementation is good.
-
-If you find this package useful and want to give back, I'd greatly appreciate a link to my [Ruby developer](http://RubyDeveloper.com/) site.
 
 
 
