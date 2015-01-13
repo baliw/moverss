@@ -22,9 +22,9 @@ Example
 
 The best example is in [the test file](https://github.com/jbckmn/gopod/blob/master/gopod_test.go)
 
-
-
-
+Docs
+=======
+[http://godoc.org/github.com/jbckmn/gopod](http://godoc.org/github.com/jbckmn/gopod)
 
 
 
