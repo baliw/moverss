@@ -1,14 +1,10 @@
-// Copyright 2012 Daniel Walton - All rights reserved.
-// Author: Daniel Walton <dan@RubyDeveloper.com>
-//         https://github.com/baliw
-//         @dan_gogh
-
-// Package moverss implements a rss 2.0 feed generator
+// Package moverss implements a RSS/Podcast 2.0 feed generator
 //
 //
 // RSS (Rich Site Summary, or Really Simple Syndication) is a data format used
 // to publish frequently updated works - such as blog entries, news headlines,
-// audio and video - in a standardized format.
+// audio and video - in a standardized format. Podcasts utilize this format
+// to deliver audio and video files and assiciated metadata.
 //
 // An RSS document (which is called a "feed", "web feed", or "channel") includes
 // full or summarized text, plus metadata such as publishing dates and
@@ -18,7 +14,7 @@
 //
 // Example Usage
 //
-//		c := moverss.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog")
+//		c := moverss.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog", "http://example.com/image.png")
 //		c.AddItem(&moverss.Item{
 //			Title:"Ruby Developer",
 //			Link:"http://RubyDeveloper.com/",
@@ -75,8 +71,15 @@ type Channel struct {
 	TTL            string `xml:"ttl,omitempty"`
 	SkipHours      string `xml:"skiphours,omitempty"`
 	SkipDays       string `xml:"skipdays,omitempty"`
+	TunesAuthor    string `xml:"itunes:author,omitempty"`
+	TunesSubtitle  string `xml:"itunes:subtitle,omitempty"`
+	TunesSummary   string `xml:"itunes:summary,omitempty"`
+	TunesExplicit  string `xml:"itunes:explicit,omitempty"`
 
-	Items []*Item
+	TunesOwner []*TunesOwner
+	TunesImage []*TunesImage
+	AtomLink   []*AtomLink
+	Items      []*Item
 
 	// [Fields to be implemented]
 	//  Cloud
@@ -86,6 +89,27 @@ type Channel struct {
 
 	// Stub member just for the xml generator.
 	XMLName xml.Name `xml:"channel"`
+}
+
+type TunesOwner struct {
+	Name  string `xml:"itunes:name,omitempty"`
+	Email string `xml:"itunes:email,omitempty"`
+
+	XMLName xml.Name `xml:"itunes:owner"`
+}
+
+type TunesImage struct {
+	Href string `xml:"href,attr"`
+
+	XMLName xml.Name `xml:"itunes:image"`
+}
+
+type AtomLink struct {
+	Href string `xml:"href,attr"`
+	Rel  string `xml:"rel,attr"`
+	Type string `xml:"type,attr"`
+
+	XMLName xml.Name `xml:"atom:link"`
 }
 
 type Item struct {
@@ -114,13 +138,25 @@ type Item struct {
 	// http://cyber.law.harvard.edu/rss/rss.html#ltcommentsgtSubelementOfLtitemgt
 	Comments string `xml:"comments,omitempty"`
 
-	// [Fields to be implemented]
-	//  Category
-	//  Enclosure
-	//  Source
+	Creator       string `xml:"dc:creator,omitempty"`
+	TunesAuthor   string `xml:"itunes:author,omitempty"`
+	TunesSubtitle string `xml:"itunes:subtitle,omitempty"`
+	TunesSummary  string `xml:"itunes:summary,omitempty"`
+	TunesExplicit string `xml:"itunes:explicit,omitempty"`
+	TunesDuration string `xml:"itunes:duration,omitempty"`
+
+	Enclosure []*Enclosure
 
 	// Stub member just for the xml generator.
 	XMLName xml.Name `xml:"item"`
+}
+
+type Enclosure struct {
+	Url    string `xml:"url,attr"`
+	Length string `xml:"length,attr"`
+	Type   string `xml:"type,attr"`
+
+	XMLName xml.Name `xml:"enclosure"`
 }
 
 // Use this to create the base channel of the rss feed.
@@ -130,10 +166,21 @@ type Item struct {
 // title of your website.
 // The Link is the URL to the HTML website corresponding to the channel.
 // The Description is the phrase or sentence describing the channel.
+// The Image is the image to be displayed with the podcast.
 func ChannelFactory(Title string, Link string, Description string) *Channel {
 	c := &Channel{Title: Title, Link: Link, Description: Description}
-	c.Generator = "Moverrs - http://github.com/baliw/moverss"
+	c.Generator = "moverss - http://github.com/baliw/moverss"
+	c.AtomLink = append(c.AtomLink, &AtomLink{
+		Href: Link,
+		Rel:  "self",
+		Type: "application/rss+xml",
+	})
 	return c
+}
+
+// Add an image struct to the feed
+func (c *Channel) SetTunesImage(i *TunesImage) {
+	c.TunesImage = append(c.TunesImage, i)
 }
 
 // Add an item to the feed list
@@ -148,8 +195,8 @@ func (c *Channel) Publish() []byte {
 		panic(err)
 	}
 	return bytes.Join([][]byte{
-		[]byte(`<?xml version="1.0"?>`),
-		[]byte(`<rss version="2.0">`),
+		[]byte(`<?xml version="1.0" encoding="UTF-8"?>`),
+		[]byte(`<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">`),
 		output,
 		[]byte(`</rss>`),
 	}, []byte(""))
@@ -162,8 +209,8 @@ func (c *Channel) PublishIndent() []byte {
 		panic(err)
 	}
 	return bytes.Join([][]byte{
-		[]byte(`<?xml version="1.0"?>`),
-		[]byte(`<rss version="2.0">`),
+		[]byte(`<?xml version="1.0" encoding="UTF-8"?>`),
+		[]byte(`<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">`),
 		output,
 		[]byte(`</rss>`),
 	}, []byte("\n"))
@@ -283,13 +330,33 @@ func (c *Channel) SetSkipDays(skipdays string) {
 	c.SkipDays = skipdays
 }
 
-// (Not implemented) Set the cloud field.  The cloud field allows processes to
-// register with a cloud to be notified of updates to the channel, implementing
-// a lightweight publish-subscribe protocol for RSS feeds.  More Info:
-// http://cyber.law.harvard.edu/rss/rss.html#ltcloudgtSubelementOfLtchannelgt
-//func (c *Channel) SetCloud(cloud string) {
-//	return
-//}
+// (optional) Set the channel's iTunes Explicit field.
+func (c *Channel) SetiTunesExplicit(explicit string) {
+	c.TunesExplicit = explicit
+}
+
+// (optional) Set the channel's iTunes Author field.
+func (c *Channel) SetiTunesAuthor(author string) {
+	c.TunesAuthor = author
+}
+
+// (optional) Set the channel's iTunes Subtitle field.
+func (c *Channel) SetiTunesSubtitle(subtitle string) {
+	c.TunesSubtitle = subtitle
+}
+
+// (optional) Set the channel's iTunes Summary field.
+func (c *Channel) SetiTunesSummary(summary string) {
+	c.TunesSummary = summary
+}
+
+// (optional) Set the channel's iTunes Owner struct.
+func (c *Channel) SetiTunesOwner(name string, email string) {
+	c.TunesOwner = append(c.TunesOwner, &TunesOwner{
+		Name:  name,
+		Email: email,
+	})
+}
 
 // (optional) Set the item's pubDate field.  This method can take an instance
 // of time.Time, a unix timestamp (int64) or a raw string to use for the date.
@@ -311,4 +378,13 @@ func (i *Item) SetPubDate(t interface{}) {
 		return
 	}
 	panic("moverss.Item.SetPubDate() error: Invalid date type")
+}
+
+// (optional) Set the item's iTunes Enclosure struct.
+func (i *Item) SetEnclosure(url string, length string, eType string) {
+	i.Enclosure = append(i.Enclosure, &Enclosure{
+		Url:    url,
+		Length: length,
+		Type:   eType,
+	})
 }
