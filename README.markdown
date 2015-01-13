@@ -15,16 +15,16 @@ full or summarized text, plus metadata such as publishing dates and authorship.
 Installing
 ==========
 
-    $ go get github.com/jbckmn/gopod
+    $ go get github.com/baliw/moverss
 	
 Example
 =======
 
-The best example is in [the test file](https://github.com/jbckmn/gopod/blob/master/gopod_test.go)
+The best example is in [the test file](https://github.com/baliw/moverss/blob/master/gopod_test.go)
 
 Docs
 =======
-[http://godoc.org/github.com/jbckmn/gopod](http://godoc.org/github.com/jbckmn/gopod)
+[http://godoc.org/github.com/baliw/moverss](http://godoc.org/github.com/baliw/moverss)
 
 
 

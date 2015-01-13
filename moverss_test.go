@@ -1,13 +1,13 @@
 //
 // This package implements a RSS/Podcast 2.0 feed generator
 //
-// Test code for gopod.
+// Test code for moverss.
 //
 // Use `go test` on the commandline to test this package
 //
 //
 
-package gopod
+package moverss
 
 import (
 	"fmt"
@@ -16,9 +16,9 @@ import (
 )
 
 func Test1(*testing.T) {
-	fmt.Printf("Testing gopod...\n")
+	fmt.Printf("Testing moverss...\n")
 
-	c := ChannelFactory("Daniel's Channel", "http://RubyDeveloper.com/", "My Blog", "http://example.com/image.png")
+	c := ChannelFactory("Daniel's Channel", "http://RubyDeveloper.com/", "My Blog")
 	c.SetPubDate(time.Now().UTC())
 	c.SetiTunesExplicit("No")
 
@@ -33,14 +33,14 @@ func Test1(*testing.T) {
 	t := "My title"
 	l := "http://linkedin.com"
 	i := &Item{
-		Title:       	t,
-		TunesSubtitle:	t,
-		Link:        	l,
-		Description: 	"My LinkedIn",
-		TunesDuration:	"600",
-		TunesSummary:	"I asked myself that question more than a decade ago and it changed my...",
-		Guid:			l,
-		Creator:		"Daniel's Channel",
+		Title:         t,
+		TunesSubtitle: t,
+		Link:          l,
+		Description:   "My LinkedIn",
+		TunesDuration: "600",
+		TunesSummary:  "I asked myself that question more than a decade ago and it changed my...",
+		Guid:          l,
+		Creator:       "Daniel's Channel",
 	}
 	i.SetEnclosure("http://example.com/sound.mp3", "600", "audio/mpeg")
 	i.SetPubDate(time.Now().Unix())

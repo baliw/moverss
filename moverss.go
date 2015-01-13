@@ -1,9 +1,9 @@
-// Package gopod implements a RSS/Podcast 2.0 feed generator
+// Package moverss implements a RSS/Podcast 2.0 feed generator
 //
 //
 // RSS (Rich Site Summary, or Really Simple Syndication) is a data format used
 // to publish frequently updated works - such as blog entries, news headlines,
-// audio and video - in a standardized format. Podcasts utilize this format 
+// audio and video - in a standardized format. Podcasts utilize this format
 // to deliver audio and video files and assiciated metadata.
 //
 // An RSS document (which is called a "feed", "web feed", or "channel") includes
@@ -14,20 +14,20 @@
 //
 // Example Usage
 //
-//		c := gopod.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog", "http://example.com/image.png")
-//		c.AddItem(&gopod.Item{
+//		c := moverss.ChannelFavtory("Ruby Developer", "http://RubyDeveloper.com/", "Ruby Developer Blog", "http://example.com/image.png")
+//		c.AddItem(&moverss.Item{
 //			Title:"Ruby Developer",
 //			Link:"http://RubyDeveloper.com/",
 //			Description:"My Blog",
 //			PubDate:time.Now().Unix(),
 //		})
-//		c.AddItem(&gopod.Item{
+//		c.AddItem(&moverss.Item{
 //			Title:"Stack Overflow",
 //			Link:"http://stackoverflow.com/users/1305696/daniel",
 //			Description:"My Stack Overflow",
 //			PubDate:time.Now().Unix(),
 //		})
-//		c.AddItem(&gopod.Item{
+//		c.AddItem(&moverss.Item{
 //			Title:"LinkedIn",
 //			Link:"http://www.linkedin.com/in/dangogh",
 //			Description:"My LinkedIn",
@@ -37,7 +37,7 @@
 //
 //
 //
-package gopod
+package moverss
 
 import (
 	"bytes"
@@ -59,27 +59,27 @@ type Channel struct {
 	/////////////////////
 	// Optional Fields //
 	/////////////////////
-	Language       	string `xml:"language,omitempty"`
-	Copyright      	string `xml:"copyright,omitempty"`
-	ManagingEditor 	string `xml:"managingEditor,omitempty"`
-	WebMaster      	string `xml:"webMaster,omitempty"`
-	PubDate        	string `xml:"pubDate,omitempty"`
-	LastBuildDate  	string `xml:"lastBuildDate,omitempty"`
-	Category       	string `xml:"category,omitempty"`
-	Generator      	string `xml:"generator,omitempty"`
-	Docs           	string `xml:"docs,omitempty"`
-	TTL            	string `xml:"ttl,omitempty"`
-	SkipHours      	string `xml:"skiphours,omitempty"`
-	SkipDays       	string `xml:"skipdays,omitempty"`
-	TunesAuthor    	string `xml:"itunes:author,omitempty"`
-	TunesSubtitle  	string `xml:"itunes:subtitle,omitempty"`
-	TunesSummary   	string `xml:"itunes:summary,omitempty"`
-	TunesExplicit  	string `xml:"itunes:explicit,omitempty"`
+	Language       string `xml:"language,omitempty"`
+	Copyright      string `xml:"copyright,omitempty"`
+	ManagingEditor string `xml:"managingEditor,omitempty"`
+	WebMaster      string `xml:"webMaster,omitempty"`
+	PubDate        string `xml:"pubDate,omitempty"`
+	LastBuildDate  string `xml:"lastBuildDate,omitempty"`
+	Category       string `xml:"category,omitempty"`
+	Generator      string `xml:"generator,omitempty"`
+	Docs           string `xml:"docs,omitempty"`
+	TTL            string `xml:"ttl,omitempty"`
+	SkipHours      string `xml:"skiphours,omitempty"`
+	SkipDays       string `xml:"skipdays,omitempty"`
+	TunesAuthor    string `xml:"itunes:author,omitempty"`
+	TunesSubtitle  string `xml:"itunes:subtitle,omitempty"`
+	TunesSummary   string `xml:"itunes:summary,omitempty"`
+	TunesExplicit  string `xml:"itunes:explicit,omitempty"`
 
-	TunesOwner		[]*TunesOwner
-	TunesImage		[]*TunesImage
-	AtomLink		[]*AtomLink
-	Items 			[]*Item
+	TunesOwner []*TunesOwner
+	TunesImage []*TunesImage
+	AtomLink   []*AtomLink
+	Items      []*Item
 
 	// [Fields to be implemented]
 	//  Cloud
@@ -92,24 +92,24 @@ type Channel struct {
 }
 
 type TunesOwner struct {
-	Name	string `xml:"itunes:name,omitempty"`
-	Email	string `xml:"itunes:email,omitempty"`
+	Name  string `xml:"itunes:name,omitempty"`
+	Email string `xml:"itunes:email,omitempty"`
 
-	XMLName xml.Name `xml:"itunes:owner"`	
+	XMLName xml.Name `xml:"itunes:owner"`
 }
 
 type TunesImage struct {
-	Href		string `xml:"href,attr"`
+	Href string `xml:"href,attr"`
 
-	XMLName xml.Name `xml:"itunes:image"`	
+	XMLName xml.Name `xml:"itunes:image"`
 }
 
 type AtomLink struct {
-	Href		string `xml:"href,attr"`
-	Rel			string `xml:"rel,attr"`
-	Type		string `xml:"type,attr"`
+	Href string `xml:"href,attr"`
+	Rel  string `xml:"rel,attr"`
+	Type string `xml:"type,attr"`
 
-	XMLName xml.Name `xml:"atom:link"`	
+	XMLName xml.Name `xml:"atom:link"`
 }
 
 type Item struct {
@@ -138,23 +138,23 @@ type Item struct {
 	// http://cyber.law.harvard.edu/rss/rss.html#ltcommentsgtSubelementOfLtitemgt
 	Comments string `xml:"comments,omitempty"`
 
-	Creator 		string `xml:"dc:creator,omitempty"`
-	TunesAuthor    	string `xml:"itunes:author,omitempty"`
-	TunesSubtitle  	string `xml:"itunes:subtitle,omitempty"`
-	TunesSummary   	string `xml:"itunes:summary,omitempty"`
-	TunesExplicit  	string `xml:"itunes:explicit,omitempty"`
-	TunesDuration  	string `xml:"itunes:duration,omitempty"`
+	Creator       string `xml:"dc:creator,omitempty"`
+	TunesAuthor   string `xml:"itunes:author,omitempty"`
+	TunesSubtitle string `xml:"itunes:subtitle,omitempty"`
+	TunesSummary  string `xml:"itunes:summary,omitempty"`
+	TunesExplicit string `xml:"itunes:explicit,omitempty"`
+	TunesDuration string `xml:"itunes:duration,omitempty"`
 
-	Enclosure		[]*Enclosure
+	Enclosure []*Enclosure
 
 	// Stub member just for the xml generator.
 	XMLName xml.Name `xml:"item"`
 }
 
-type Enclosure struct	{
-	Url 		string `xml:"url,attr"`
-	Length 		string `xml:"length,attr"`
-	Type 		string `xml:"type,attr"`
+type Enclosure struct {
+	Url    string `xml:"url,attr"`
+	Length string `xml:"length,attr"`
+	Type   string `xml:"type,attr"`
 
 	XMLName xml.Name `xml:"enclosure"`
 }
@@ -167,17 +167,14 @@ type Enclosure struct	{
 // The Link is the URL to the HTML website corresponding to the channel.
 // The Description is the phrase or sentence describing the channel.
 // The Image is the image to be displayed with the podcast.
-func ChannelFactory(Title string, Link string, Description string, Image string) *Channel {
+func ChannelFactory(Title string, Link string, Description string) *Channel {
 	c := &Channel{Title: Title, Link: Link, Description: Description}
-	c.Generator = "gopod - http://github.com/jbckmn/gopod"
-	c.SetTunesImage(&TunesImage{
-			Href:	Image,
-		})
+	c.Generator = "moverss - http://github.com/baliw/moverss"
 	c.AtomLink = append(c.AtomLink, &AtomLink{
-			Href:	Link,
-			Rel:	"self",
-			Type:	"application/rss+xml",
-		})
+		Href: Link,
+		Rel:  "self",
+		Type: "application/rss+xml",
+	})
 	return c
 }
 
@@ -268,7 +265,7 @@ func (c *Channel) SetPubDate(t interface{}) {
 		c.PubDate = time.Unix(t.(int64), 0).UTC().Format(time.RFC1123)
 		return
 	}
-	panic("gopod.Channel.SetPubDate() error: Invalid date type")
+	panic("moverss.Channel.SetPubDate() error: Invalid date type")
 }
 
 // (optional) Set the lastBuildDate field. The lastBuildDate is The last time
@@ -285,7 +282,7 @@ func (c *Channel) SetLastBuildDate(t interface{}) {
 		c.LastBuildDate = time.Unix(t.(int64), 0).UTC().Format(time.RFC1123)
 		return
 	}
-	panic("gopod.Channel.SetPubDate() error: Invalid date type")
+	panic("moverss.Channel.SetPubDate() error: Invalid date type")
 }
 
 // (optional) Set the category field.  The category field specifies one or more
@@ -333,32 +330,32 @@ func (c *Channel) SetSkipDays(skipdays string) {
 	c.SkipDays = skipdays
 }
 
-// (optional) Set the channel's iTunes Explicit field. 
+// (optional) Set the channel's iTunes Explicit field.
 func (c *Channel) SetiTunesExplicit(explicit string) {
 	c.TunesExplicit = explicit
 }
 
-// (optional) Set the channel's iTunes Author field. 
+// (optional) Set the channel's iTunes Author field.
 func (c *Channel) SetiTunesAuthor(author string) {
 	c.TunesAuthor = author
 }
 
-// (optional) Set the channel's iTunes Subtitle field. 
+// (optional) Set the channel's iTunes Subtitle field.
 func (c *Channel) SetiTunesSubtitle(subtitle string) {
 	c.TunesSubtitle = subtitle
 }
 
-// (optional) Set the channel's iTunes Summary field. 
+// (optional) Set the channel's iTunes Summary field.
 func (c *Channel) SetiTunesSummary(summary string) {
 	c.TunesSummary = summary
 }
 
-// (optional) Set the channel's iTunes Owner struct. 
+// (optional) Set the channel's iTunes Owner struct.
 func (c *Channel) SetiTunesOwner(name string, email string) {
 	c.TunesOwner = append(c.TunesOwner, &TunesOwner{
-			Name:	name,
-			Email: 	email,
-		})
+		Name:  name,
+		Email: email,
+	})
 }
 
 // (optional) Set the item's pubDate field.  This method can take an instance
@@ -380,14 +377,14 @@ func (i *Item) SetPubDate(t interface{}) {
 		i.PubDate = time.Unix(t.(int64), 0).UTC().Format(time.RFC1123)
 		return
 	}
-	panic("gopod.Item.SetPubDate() error: Invalid date type")
+	panic("moverss.Item.SetPubDate() error: Invalid date type")
 }
 
-// (optional) Set the item's iTunes Enclosure struct. 
+// (optional) Set the item's iTunes Enclosure struct.
 func (i *Item) SetEnclosure(url string, length string, eType string) {
 	i.Enclosure = append(i.Enclosure, &Enclosure{
-			Url: 	url,
-			Length:	length,
-			Type:	eType,
-		})
+		Url:    url,
+		Length: length,
+		Type:   eType,
+	})
 }
